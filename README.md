@@ -1,12 +1,12 @@
-# FastAPI Task API with JWT Authentication
+# FastAPI ToDo List App with JWT Authentication
 
-A simple REST API for task management with JWT-based authentication.
+A simple REST API for todo list management with JWT-based authentication.
 
 ## Features
 
 - User registration and login (supports both form and JSON)
 - JWT token-based authentication
-- Protected task management endpoints
+- Protected todo list endpoints
 - Comprehensive API documentation
 - Environment-based configuration
 
@@ -24,8 +24,8 @@ fastapi/
 │   └── user.py           # User model and in-memory storage
 ├── main.py               # FastAPI application and endpoints
 ├── requirements.txt      # Project dependencies
-├── .env                  # Environment variables (not committed to version control)
-└── README.md             # This documentation
+├── .env                  # Environment variables
+└── README.md             # Documentation
 ```
 
 ## Installation
@@ -50,7 +50,7 @@ fastapi/
    ACCESS_TOKEN_EXPIRE_MINUTES=30
 
    # Application Settings
-   APP_NAME="Task Management API" 
+   APP_NAME="ToDo List App" 
    APP_VERSION="1.0.0"
    DEBUG=True
 
@@ -71,7 +71,7 @@ fastapi/
 | JWT_SECRET                | Secret key for JWT token signature       | (fallback development secret) |
 | JWT_ALGORITHM             | Algorithm for JWT token encryption       | HS256                         |
 | ACCESS_TOKEN_EXPIRE_MINUTES | Token expiration time in minutes       | 30                            |
-| APP_NAME                  | Name of the application                  | Task Management API           |
+| APP_NAME                  | Name of the application                  | ToDo List App                 |
 | APP_VERSION               | Version of the application               | 1.0.0                         |
 | DEBUG                     | Enable debug mode (auto-reload)          | False                         |
 | HOST                      | Server host                              | 0.0.0.0                       |

@@ -9,7 +9,7 @@ class Task(BaseModel):
     """
     Task model
     
-    This model represents a task in the task management system.
+    This model represents a task in the todo list application.
     Each task has an ID, title, optional description, and completion status.
     """
     id: int

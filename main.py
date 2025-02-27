@@ -19,8 +19,8 @@ from datetime import timedelta
 
 # Create FastAPI instance
 app = FastAPI(
-    title="Task Management API",
-    description="A simple REST API for task management with JWT authentication",
+    title="ToDo List App",
+    description="A simple REST API for todo list management with JWT authentication",
     version="1.0.0"
 )
 
@@ -214,7 +214,7 @@ def login_json(login_data: LoginRequest):
 
 
 # =========================================
-# Task Management Routes
+# Todo List Routes
 # =========================================
 
 @app.get(
