@@ -47,7 +47,13 @@ def query_item_by_id(item_id: int) -> Item:
     return items[item_id]
 
 @app.get("/items/")
-def query_item_by_parameters(id: int | None = None, name: str | None = None, price: float | None = None, count: int | None = None, category: Category | None = None) -> dict[str, dict[int, Item]]:
+def query_item_by_parameters(
+    id: int | None = None, 
+    name: str | None = None, 
+    price: float | None = None, 
+    count: int | None = None, 
+    category: Category | None = None) -> dict[str, dict[int, Item]]:
+    
     def check_item(item: Item) -> bool:
         return all(
             (
@@ -62,3 +68,7 @@ def query_item_by_parameters(id: int | None = None, name: str | None = None, pri
     return {
         "Items": selection
     }
+
+
+
+
