@@ -160,7 +160,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
     access_token_expires = timedelta(minutes=30)
     access_token = create_access_token(
         data={"sub": user.username}, 
-        expires_delta=access_token_expires
+        expires=access_token_expires
     )
     
     # Return the token response
@@ -206,7 +206,7 @@ def login_json(login_data: LoginRequest):
     access_token_expires = timedelta(minutes=30)
     access_token = create_access_token(
         data={"sub": user.username}, 
-        expires_delta=access_token_expires
+        expires=access_token_expires
     )
     
     # Return the token response

@@ -33,13 +33,13 @@ def token_response(token: str) -> dict:
     }
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> dict:
+def create_access_token(data: dict, expires: Optional[timedelta] = None) -> dict:
     """
     Create a new JWT access token
     
     Args:
         data (dict): Payload data to be encoded in the token
-        expires_delta (Optional[timedelta], optional): Custom expiration time. 
+        expires (Optional[timedelta], optional): Custom expiration time. 
                                                        Defaults to None.
     
     Returns:
@@ -49,8 +49,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     to_encode = data.copy()
     
     # Set token expiration time
-    if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+    if expires:
+        expire = datetime.utcnow() + expires
     else:
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
