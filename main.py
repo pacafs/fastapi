@@ -374,4 +374,21 @@ def delete_task(task_id: int):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    import os
+    from dotenv import load_dotenv
+    
+    # Load environment variables
+    load_dotenv()
+    
+    # Get server configuration from environment variables
+    host = os.getenv("HOST", "0.0.0.0")
+    port = int(os.getenv("PORT", "8000"))
+    debug = os.getenv("DEBUG", "False").lower() == "true"
+    
+    # Start the server
+    uvicorn.run(
+        "main:app", 
+        host=host, 
+        port=port, 
+        reload=debug
+    )

@@ -8,6 +8,7 @@ A simple REST API for task management with JWT-based authentication.
 - JWT token-based authentication
 - Protected task management endpoints
 - Comprehensive API documentation
+- Environment-based configuration
 
 ## Project Structure
 
@@ -23,6 +24,7 @@ fastapi/
 │   └── user.py           # User model and in-memory storage
 ├── main.py               # FastAPI application and endpoints
 ├── requirements.txt      # Project dependencies
+├── .env                  # Environment variables (not committed to version control)
 └── README.md             # This documentation
 ```
 
@@ -40,10 +42,46 @@ fastapi/
    pip install -r requirements.txt
    ```
 
-4. Run the server:
+4. Create a `.env` file with your environment variables or use the provided example:
+   ```
+   # JWT Configuration
+   JWT_SECRET="your_generated_secret_key"
+   JWT_ALGORITHM="HS256"
+   ACCESS_TOKEN_EXPIRE_MINUTES=30
+
+   # Application Settings
+   APP_NAME="Task Management API" 
+   APP_VERSION="1.0.0"
+   DEBUG=True
+
+   # API Settings
+   HOST="0.0.0.0"
+   PORT=8000
+   ```
+
+5. Run the server:
    ```
    python main.py
    ```
+
+## Environment Variables
+
+| Variable                  | Description                              | Default                       |
+|---------------------------|------------------------------------------|-------------------------------|
+| JWT_SECRET                | Secret key for JWT token signature       | (fallback development secret) |
+| JWT_ALGORITHM             | Algorithm for JWT token encryption       | HS256                         |
+| ACCESS_TOKEN_EXPIRE_MINUTES | Token expiration time in minutes       | 30                            |
+| APP_NAME                  | Name of the application                  | Task Management API           |
+| APP_VERSION               | Version of the application               | 1.0.0                         |
+| DEBUG                     | Enable debug mode (auto-reload)          | False                         |
+| HOST                      | Server host                              | 0.0.0.0                       |
+| PORT                      | Server port                              | 8000                          |
+
+For security, it's recommended to generate a random JWT_SECRET using Python:
+```python
+import secrets
+print(secrets.token_hex(32))
+```
 
 ## API Endpoints
 
