@@ -43,7 +43,7 @@ class UserInDB(UserBase):
     class Config:
         """Pydantic model configuration"""
         # Allow model to be converted to/from ORM objects (useful when using SQLAlchemy)
-        orm_mode = True
+        from_attributes = True
 
 
 # =========================================

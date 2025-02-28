@@ -20,7 +20,7 @@ class Task(BaseModel):
     class Config:
         """Pydantic model configuration"""
         # Schema example for documentation
-        schema_extra = {
+        json_schema_extra = {
             "example": {
                 "id": 1,
                 "title": "Buy groceries",
