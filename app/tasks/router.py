@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from .models import Task, tasks
-from app.auth.jwt_bearer import JWTBearer  # Fixed import path
+from app.auth.jwt.jwt_bearer import JWTBearer  # Fixed import path
 
 router = APIRouter()
 

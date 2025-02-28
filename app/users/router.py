@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from db.user import UserCreate, UserInDB, users_db  # Fixed import path
-from app.auth.jwt_bearer import JWTBearer  # Fixed import path
-from app.auth.users import get_user_by_username, authenticate_user, create_user  # Fixed import path
+from app.auth.jwt.jwt_bearer import JWTBearer  # Fixed import path
+from app.users.models import get_user_by_username, authenticate_user, create_user  # Fixed import path
 from typing import List
 
 router = APIRouter()
