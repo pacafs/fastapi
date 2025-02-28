@@ -1,6 +1,51 @@
 from passlib.context import CryptContext
-from db.user import UserInDB, UserCreate, users_db
+from pydantic import BaseModel
+from db.user import UserBase, UserInDB, UserCreate, users_db
 from typing import Optional
+
+
+class UserResponse(UserBase):
+    """
+    User response model
+    
+    This model defines what user data is returned to clients.
+    It excludes sensitive information like passwords.
+    """
+    id: int
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "id": 1,
+                "username": "johndoe",
+                "email": "john@example.com"
+            }
+        }
+
+class LoginRequest(BaseModel):
+    """
+    JSON login request model
+    
+    This model defines the structure of the JSON login request.
+    It's used for the /login-json endpoint as an alternative to form data.
+    """
+    username: str
+    password: str
+    
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "username": "johndoe",
+                "password": "password123"
+            }
+        }
+
+# Define token response model
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
 
 # =========================================
 # Password Hashing Configuration
