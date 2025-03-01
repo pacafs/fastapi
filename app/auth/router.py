@@ -6,8 +6,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from datetime import timedelta
 ## Modules
 from app.auth.jwt.jwt_handler import create_access_token
-from app.users.models import Token, LoginRequest, UserResponse, authenticate_user, create_user, get_user_by_email
-from db.user import UserCreate
+from db.user import UserCreate, Token, LoginRequest, UserResponse
+from app.users.models import authenticate_user, create_user, get_user_by_email
 
 
 router = APIRouter()

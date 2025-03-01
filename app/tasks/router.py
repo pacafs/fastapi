@@ -1,11 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
 from .models import Task, tasks
-from app.auth.jwt.jwt_bearer import JWTBearer  # Fixed import path
+from app.auth.jwt.jwt_bearer import JWTBearer
+
 
 router = APIRouter()
 
-@router.get("/", response_model=List[Task], dependencies=[Depends(JWTBearer())])
+# GET to /tasks from the prefix
+@router.get("", response_model=List[Task], dependencies=[Depends(JWTBearer())])
 async def get_tasks():
     """Get all tasks"""
     return tasks
@@ -21,7 +23,8 @@ async def get_task(task_id: int):
         detail=f"Task with ID {task_id} not found"
     )
 
-@router.post("/", response_model=Task, status_code=status.HTTP_201_CREATED, dependencies=[Depends(JWTBearer())])
+# POST to /tasks from the prefix
+@router.post("", response_model=Task, status_code=status.HTTP_201_CREATED, dependencies=[Depends(JWTBearer())])
 async def create_task(task: Task):
     """Create a new task"""
     tasks.append(task)
@@ -49,4 +52,4 @@ async def delete_task(task_id: int):
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
         detail=f"Task with ID {task_id} not found"
-    ) 
+    )

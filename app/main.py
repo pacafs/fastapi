@@ -9,7 +9,7 @@ from app.users.router import router as users_router
 from app.auth.router  import router as auth_router
 
 # Create FastAPI app
-app = FastAPI(title="ToDo List API")
+app = FastAPI(title="ToDo List API", redirect_slashes=False)
 
 # Register routers
 app.include_router(users_router, prefix="/users", tags=["users"])
@@ -25,6 +25,5 @@ async def root():
         "documentation": "/docs",
         "version": "1.0.0"
     }
-
 
 

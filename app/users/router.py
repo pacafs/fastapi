@@ -1,8 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from db.user import UserCreate, UserInDB, users_db  # Fixed import path
-from app.auth.jwt.jwt_bearer import JWTBearer  # Fixed import path
-from app.users.models import get_user_by_username, authenticate_user, create_user  # Fixed import path
-from typing import List
+from db.user import UserCreate, users_db
+from app.auth.jwt.jwt_bearer import JWTBearer
+from app.users.models import get_user_by_username, authenticate_user, create_user
 
 router = APIRouter()
 
@@ -33,7 +32,3 @@ async def register_user(user_data: UserCreate):
     user = create_user(user_data)
     
     return {"message": "User created successfully"}
-
-
-
-
