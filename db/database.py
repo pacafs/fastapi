@@ -1,34 +1,32 @@
-from config import pg_url
+from db.config import pg_url
 from typing import Annotated
-from fastapi import Depends, FastAPI, HTTPException, Query
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from fastapi import Depends
+from sqlmodel import Field, Session, SQLModel, create_engine
 
-# Add table=True to make this a database table
-class Task(SQLModel, table=True): # type: ignore
-    __tablename__ = "tasks"
-    id: int | None = Field(default=None, primary_key=True)
-    title: str = Field(index=True)
-    description: str = Field(index=True)
-    completed: bool = Field(default=False)
-
-engine = create_engine(pg_url)
+engine = create_engine(str(pg_url))
 
 def create_tables():
     print("Creating tables...")
     SQLModel.metadata.create_all(engine)
     print("Tables created successfully")
 
-def get_session():
+def start_session():
     with Session(engine) as session:
         yield session
 
-SessionLocal = Annotated[Session, Depends(get_session)]
+        
+
+pgSession = Annotated[Session, Depends(start_session)]
+
+
+
 
 # Test the database connection
 def test_database_connection():
     try:
         with Session(engine) as session:
             print("Database connection successful")
+            #print(session)
     except Exception as e:
         print(f"Database connection failed: {e}")
 
@@ -36,4 +34,3 @@ def test_database_connection():
 if __name__ == "__main__":
     create_tables()
     test_database_connection()
-

@@ -11,6 +11,4 @@ DATABASE_CONFIG = {
     "port": os.getenv("DB_PORT"),
 }
 
-
-#PostgreSQL URL
-pg_url = f"postgresql://{DATABASE_CONFIG['user']}:{DATABASE_CONFIG['password']}@{DATABASE_CONFIG['host']}:{DATABASE_CONFIG['port']}/{DATABASE_CONFIG['dbname']}" 
+pg_url = os.getenv("DB_URL")
