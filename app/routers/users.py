@@ -2,9 +2,9 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from sqlmodel import select
 from app.models.user import User, UserCreate, UserResponse, TokenResponse, LoginRequest
 from db.database import pgSession
-from app.auth.utils import hash_password, verify_password
-from app.auth.jwt.jwt_handler import create_access_token
-from app.auth.jwt.jwt_bearer import JWTBearer
+from app.utils.auth.utils import hash_password, verify_password
+from app.utils.auth.jwt.jwt_handler import create_access_token
+from app.utils.auth.jwt.jwt_bearer import JWTBearer
 from typing import List
 
 # Create a router instance

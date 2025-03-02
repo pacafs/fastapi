@@ -3,7 +3,7 @@ from sqlmodel import select
 from typing import List, Annotated
 from db.database import pgSession
 from app.models.task import Task, TaskCreate, TaskResponse, TaskUpdate
-from app.auth.jwt.jwt_bearer import JWTBearer
+from app.utils.auth.jwt.jwt_bearer import JWTBearer
 
 router = APIRouter()
 
