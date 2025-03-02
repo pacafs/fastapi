@@ -1,24 +1,29 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from sqlmodel import select
-from typing import List
+from typing import List, Annotated
 from db.database import pgSession
 from app.models.task import Task, TaskCreate, TaskResponse, TaskUpdate
-
+from app.auth.jwt.jwt_bearer import JWTBearer
+from app.auth.jwt.jwt_handler import decode_token
 
 router = APIRouter()
 
+# Create a JWT bearer instance
+jwt_bearer = JWTBearer()
+
+TokenDep = Annotated[str, Depends(jwt_bearer)]
+
 # GET to /tasks from the prefix
-@router.get("", response_model=List[Task], dependencies=None)
-def get_tasks(session: pgSession):
+@router.get("", response_model=List[Task])
+def get_tasks(token: TokenDep, session: pgSession):
     """Get all tasks"""
     return session.exec(select(Task)).all()
 
-@router.get("/{task_id}", response_model=TaskResponse, dependencies=None)
-def get_task(task_id: int, session: pgSession):
+@router.get("/{task_id}", response_model=TaskResponse)
+def get_task(task_id: int, token: TokenDep, session: pgSession):
     """Get a specific task by ID"""
     task = session.get(Task, task_id)
     if task is None:
-        from fastapi import HTTPException, status
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Task with ID {task_id} not found"
@@ -26,8 +31,8 @@ def get_task(task_id: int, session: pgSession):
     return task
 
 # POST to /tasks from the prefix
-@router.post("", response_model=TaskResponse, dependencies=None)
-def create_task(task: TaskCreate, session: pgSession):
+@router.post("", response_model=TaskResponse)
+def create_task(task: TaskCreate, token: TokenDep, session: pgSession):
     """Create a new task"""
     # Convert TaskCreate to Task
     db_task = Task(**task.model_dump())
@@ -36,8 +41,8 @@ def create_task(task: TaskCreate, session: pgSession):
     session.refresh(db_task)
     return db_task
 
-@router.put("/{task_id}", response_model=TaskResponse, dependencies=None)
-def update_task(task_id: int, updated_task: TaskUpdate, session: pgSession):
+@router.put("/{task_id}", response_model=TaskResponse)
+def update_task(task_id: int, updated_task: TaskUpdate, token: TokenDep, session: pgSession):
     """Update an existing task"""
     task = session.get(Task, task_id)
     if task is None:
@@ -45,16 +50,19 @@ def update_task(task_id: int, updated_task: TaskUpdate, session: pgSession):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Task with ID {task_id} not found"
         )
-    for key, value in updated_task.model_dump().items():
+    # Update task attributes from the request
+    task_data = updated_task.model_dump(exclude_unset=True)
+    for key, value in task_data.items():
         setattr(task, key, value)
-        session.add(task)
-        session.commit()
-        session.refresh(task)
+    
+    session.add(task)
+    session.commit()
+    session.refresh(task)
     return task
 
 
-@router.delete("/{task_id}", response_model=TaskResponse, dependencies=None)
-def delete_task(task_id: int, session: pgSession):
+@router.delete("/{task_id}", response_model=TaskResponse)
+def delete_task(task_id: int, token: TokenDep, session: pgSession):
     """Delete a task"""
     task = session.get(Task, task_id)
     if task is None:
