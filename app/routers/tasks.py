@@ -1,9 +1,8 @@
 from fastapi import APIRouter, HTTPException, status
 from sqlmodel import select
 from typing import List
-from db.task import Task
 from db.database import pgSession
-from app.models.task import TaskCreate, TaskResponse, TaskUpdate
+from app.models.task import Task, TaskCreate, TaskResponse, TaskUpdate
 
 
 router = APIRouter()

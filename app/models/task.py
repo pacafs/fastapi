@@ -1,5 +1,14 @@
 from pydantic import BaseModel
 from typing import Optional
+from sqlmodel import Field, SQLModel
+
+class Task(SQLModel, table=True): # type: ignore
+    __tablename__ = "tasks" # type: ignore
+
+    id: int | None = Field(default=None, primary_key=True)
+    title: str = Field(index=True)
+    description: str = Field(index=True)
+    completed: bool = Field(default=False)
 
 # Base model with common attributes
 class TaskBase(BaseModel):
@@ -27,3 +36,4 @@ class TaskResponse(TaskBase):
     
     # This tells Pydantic to use the orm_mode in V2
     model_config = {"from_attributes": True}
+
