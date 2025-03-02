@@ -4,23 +4,22 @@ from typing import List, Annotated
 from db.database import pgSession
 from app.models.task import Task, TaskCreate, TaskResponse, TaskUpdate
 from app.auth.jwt.jwt_bearer import JWTBearer
-from app.auth.jwt.jwt_handler import decode_token
 
 router = APIRouter()
 
 # Create a JWT bearer instance
 jwt_bearer = JWTBearer()
-
-TokenDep = Annotated[str, Depends(jwt_bearer)]
+# Create a dependency to check the token
+checkToken = Annotated[str, Depends(jwt_bearer)]
 
 # GET to /tasks from the prefix
 @router.get("", response_model=List[Task])
-def get_tasks(token: TokenDep, session: pgSession):
+def get_tasks(token: checkToken, session: pgSession):
     """Get all tasks"""
     return session.exec(select(Task)).all()
 
 @router.get("/{task_id}", response_model=TaskResponse)
-def get_task(task_id: int, token: TokenDep, session: pgSession):
+def get_task(task_id: int, token: checkToken, session: pgSession):
     """Get a specific task by ID"""
     task = session.get(Task, task_id)
     if task is None:
@@ -32,7 +31,7 @@ def get_task(task_id: int, token: TokenDep, session: pgSession):
 
 # POST to /tasks from the prefix
 @router.post("", response_model=TaskResponse)
-def create_task(task: TaskCreate, token: TokenDep, session: pgSession):
+def create_task(task: TaskCreate, token: checkToken, session: pgSession):
     """Create a new task"""
     # Convert TaskCreate to Task
     db_task = Task(**task.model_dump())
@@ -42,7 +41,7 @@ def create_task(task: TaskCreate, token: TokenDep, session: pgSession):
     return db_task
 
 @router.put("/{task_id}", response_model=TaskResponse)
-def update_task(task_id: int, updated_task: TaskUpdate, token: TokenDep, session: pgSession):
+def update_task(task_id: int, updated_task: TaskUpdate, token: checkToken, session: pgSession):
     """Update an existing task"""
     task = session.get(Task, task_id)
     if task is None:
@@ -62,7 +61,7 @@ def update_task(task_id: int, updated_task: TaskUpdate, token: TokenDep, session
 
 
 @router.delete("/{task_id}", response_model=TaskResponse)
-def delete_task(task_id: int, token: TokenDep, session: pgSession):
+def delete_task(task_id: int, token: checkToken, session: pgSession):
     """Delete a task"""
     task = session.get(Task, task_id)
     if task is None:
