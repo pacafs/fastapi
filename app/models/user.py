@@ -6,10 +6,9 @@ class User(SQLModel, table=True): # type: ignore
     __tablename__ = "users" # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
-    username: str = Field(index=True)
-    email: str = Field(index=True)
+    username: str = Field(index=True, unique=True)
+    email: str = Field(index=True, unique=True)
     hashed_password: str = Field(index=True)
-
 
 class UserBase(BaseModel):
     username: str
