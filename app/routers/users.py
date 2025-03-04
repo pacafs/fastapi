@@ -15,10 +15,10 @@ jwt_bearer = JWTBearer()
 checkToken = Annotated[str, Depends(jwt_bearer)]
 
 
-@router.get('', response_model=List[UserResponse])
-def get_users(token: checkToken, session: pgSession):
-    """Get all users (without sensitive information)"""
-    return session.exec(select(User)).all()
+# @router.get('', response_model=List[UserResponse])
+# def get_users(token: checkToken, session: pgSession):
+#     """Get all users (without sensitive information)"""
+#     return session.exec(select(User)).all()
 
 @router.get('/me', response_model=UserResponse)
 def get_me(token: checkToken, session: pgSession):
@@ -169,6 +169,6 @@ def refresh_token(refresh_request: RefreshRequest, session: pgSession):
     
     session.add(new_db_refresh_token)
     session.commit()
-    
+    # The function returns a dictionary containing the new access token and refresh token for the user.
+    # {"access_token": tokens["access_token"], "refresh_token": tokens["refresh_token"]}
     return tokens
-
