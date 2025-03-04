@@ -15,10 +15,10 @@ jwt_bearer = JWTBearer()
 checkToken = Annotated[str, Depends(jwt_bearer)]
 
 
-# @router.get('', response_model=List[UserResponse])
-# def get_users(token: checkToken, session: pgSession):
-#     """Get all users (without sensitive information)"""
-#     return session.exec(select(User)).all()
+@router.get('', response_model=List[UserResponse])
+def get_users(token: checkToken, session: pgSession):
+    """Get all users (without sensitive information)"""
+    return session.exec(select(User)).all()
 
 @router.get('/me', response_model=UserResponse)
 def get_me(token: checkToken, session: pgSession):
