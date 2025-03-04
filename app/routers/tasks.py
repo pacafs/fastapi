@@ -10,8 +10,8 @@ router = APIRouter()
 # Create a JWT bearer instance
 jwt_bearer = JWTBearer()
 # Create a dependency to check the token
-checkToken = Annotated[str, Depends(lambda: "test_token")] # jwt_bearer
-
+#checkToken = Annotated[str, Depends(lambda: "test_token")] # jwt_bearer
+checkToken = Annotated[str, Depends(jwt_bearer)]
 # GET to /tasks from the prefix
 @router.get("", response_model=List[Task])
 def get_tasks(token: checkToken, session: pgSession):
