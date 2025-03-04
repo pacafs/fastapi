@@ -1,8 +1,9 @@
 import time
-import jwt  # You'll need to install PyJWT: pip install PyJWT
-from typing import Dict, Optional
+import jwt
+from typing import Dict, Optional, Tuple, Any
 from datetime import datetime, timedelta
 import os
+import uuid
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -15,35 +16,46 @@ load_dotenv()
 JWT_SECRET = os.getenv("JWT_SECRET", "fallback_secret_for_development_only")
 JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+REFRESH_TOKEN_EXPIRE_DAYS = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
 
 
-def token_response(token: str) -> dict:
+def token_response(access_token: str, refresh_token: Optional[str] = None, expires_in: Optional[int] = None) -> Dict[str, Any]:
     """
     Create a standard response format for JWT tokens
     
     Args:
-        token (str): The encoded JWT token
+        access_token (str): The encoded JWT access token
+        refresh_token (str, optional): The refresh token
+        expires_in (int, optional): Token expiration time in seconds
         
     Returns:
         dict: A dictionary containing the token and its type
     """
-    return {
-        "access_token": token,
+    response: Dict[str, Any] = {
+        "access_token": access_token,
         "token_type": "bearer"
     }
+    
+    if refresh_token:
+        response["refresh_token"] = refresh_token
+    
+    if expires_in:
+        response["expires_in"] = expires_in
+    
+    return response
 
 
-def create_access_token(data: dict, expires: Optional[timedelta] = None) -> dict:
+def create_access_token(data: dict, expires: Optional[timedelta] = None) -> str:
     """
     Create a new JWT access token
     
     Args:
         data (dict): Payload data to be encoded in the token
         expires (Optional[timedelta], optional): Custom expiration time. 
-                                                       Defaults to None.
+                                                 Defaults to None.
     
     Returns:
-        dict: The token response containing the JWT token
+        str: The JWT token
     """
     # Create a copy of the data to avoid modifying the original
     to_encode = data.copy()
@@ -55,12 +67,50 @@ def create_access_token(data: dict, expires: Optional[timedelta] = None) -> dict
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     
     # Add the expiration claim to the token payload
-    to_encode.update({"exp": expire})
+    to_encode.update({"exp": int(expire.timestamp())})
     
     # Encode the JWT token
     encoded_jwt = jwt.encode(to_encode, JWT_SECRET, algorithm=JWT_ALGORITHM)
     
-    return token_response(encoded_jwt)
+    return encoded_jwt
+
+
+def create_refresh_token() -> Tuple[str, datetime]:
+    """
+    Create a new refresh token
+    
+    Returns:
+        Tuple[str, datetime]: The refresh token and its expiration date
+    """
+    # Generate a unique token
+    token = str(uuid.uuid4())
+    
+    # Set expiration date
+    expires_at = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    
+    return token, expires_at
+
+
+def create_tokens(data: dict) -> dict:
+    """
+    Create both access and refresh tokens
+    
+    Args:
+        data (dict): Payload data to be encoded in the access token
+        
+    Returns:
+        dict: Dictionary containing both tokens and metadata
+    """
+    # Create access token
+    access_token = create_access_token(data)
+    
+    # Create refresh token
+    refresh_token, _ = create_refresh_token()
+    
+    # Calculate expiration in seconds
+    expires_in = ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    
+    return token_response(access_token, refresh_token, expires_in)
 
 
 def decode_token(token: str) -> Dict:
