@@ -98,7 +98,7 @@ def login_user(login_data: LoginRequest, session: pgSession):
     
     return tokens
 
-@router.post("/logout", status_code=200)
+@router.delete("/logout", status_code=200)
 def logout_user(token: checkToken, refresh_request: RefreshRequest, session: pgSession):
     """Logout a user by revoking their refresh token"""
     # Revoke the refresh token
