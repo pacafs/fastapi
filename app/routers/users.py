@@ -33,9 +33,9 @@ def get_me(token: checkToken, session: pgSession):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     return user
 
-@router.post("/register", status_code=201, response_model=UserResponse)
+@router.post("/register", status_code=201, response_model=TokenResponse)
 def create_user(user: UserCreate, session: pgSession):
-    """Create a new user"""
+    """Create a new user and return JWT tokens"""
     # Check if user already exists
     existing_user = session.exec(select(User).where(User.username == user.username)).first()
     if existing_user:
@@ -59,7 +59,29 @@ def create_user(user: UserCreate, session: pgSession):
     session.add(db_user)
     session.commit()
     session.refresh(db_user)
-    return db_user
+
+    # Ensure user.id is not None
+    if db_user.id is None:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="User ID is not set"
+        )
+    
+    # Generate tokens
+    tokens = create_tokens(data={"sub": db_user.username, "user_id": db_user.id})
+    
+    # Store refresh token in database
+    refresh_token, expires_at = create_refresh_token()
+    db_refresh_token = RefreshToken(
+        token=tokens["refresh_token"],
+        expires_at=expires_at,
+        user_id=cast(int, db_user.id)  # Cast to satisfy type checker
+    )
+    
+    session.add(db_refresh_token)
+    session.commit()
+    
+    return tokens
 
 
 @router.post("/login", status_code=200, response_model=TokenResponse)
