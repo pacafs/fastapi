@@ -5,8 +5,10 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from db.database import create_tables
 # Import routers
-from app.routers.tasks import router as tasks_router
-from app.routers.users import router as users_router
+from app.routers.tasks     import router as tasks_router
+from app.routers.users     import router as users_router
+from app.routers.deep_seek import router as deepseek_router
+
 from fastapi.middleware.cors import CORSMiddleware
 
 @asynccontextmanager
@@ -30,8 +32,9 @@ app.add_middleware(
 )
 
 # Register routers
-app.include_router(users_router, prefix="/users", tags=["users"])
-app.include_router(tasks_router, prefix="/tasks", tags=["tasks"])
+app.include_router(users_router,    prefix="/users", tags=["users"])
+app.include_router(tasks_router,    prefix="/tasks", tags=["tasks"])
+app.include_router(deepseek_router, prefix="/deep",  tags=["deep_seek"])
 
 # Root endpoint
 @app.get("/", tags=["Root"])
