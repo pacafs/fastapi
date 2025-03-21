@@ -3,7 +3,7 @@ from sqlmodel import select
 from app.models.user import User, UserCreate, UserResponse, TokenResponse, LoginRequest, RefreshToken, RefreshRequest
 from db.database import pgSession
 from app.utils.auth.utils import hash_password, verify_password
-from app.utils.auth.jwt.jwt_handler import create_access_token, create_tokens, decode_token, create_refresh_token
+from app.utils.auth.jwt.jwt_handler import create_tokens, decode_token, create_refresh_token
 from app.utils.auth.jwt.jwt_bearer import JWTBearer, decode_token
 from typing import List, Annotated, cast
 from datetime import datetime

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional
 from sqlmodel import Field, SQLModel
 from datetime import datetime
 
@@ -7,7 +6,7 @@ class User(SQLModel, table=True): # type: ignore
     __tablename__ = "users" # type: ignore
 
     id: int | None = Field(default=None, primary_key=True)
-    username: EmailStr = Field(index=True, unique=True)
+    username: str = Field(index=True, unique=True)
     email: str = Field(index=True, unique=True)
     hashed_password: str = Field(index=True)
 
