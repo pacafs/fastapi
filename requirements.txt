@@ -1,25 +1,36 @@
-# Core dependencies
-fastapi==0.110.0
-uvicorn==0.27.1
-pydantic==2.6.3
-
-# JWT Authentication
-PyJWT==2.8.0
-python-jose==3.3.0
-
-# Password hashing
-passlib==1.7.4
+annotated-types==0.7.0
+anyio==4.9.0
 bcrypt==4.1.2
-
-# Form handling for OAuth2 password flow
-python-multipart==0.0.9
-
-# Environment variables
-python-dotenv==1.0.0
-
-# Database
-sqlmodel==0.0.14
+certifi==2025.1.31
+click==8.1.8
+distro==1.9.0
+dnspython==2.7.0
+ecdsa==0.19.1
+email_validator==2.2.0
+fastapi==0.110.0
+greenlet==3.1.1
+h11==0.14.0
+httpcore==1.0.7
+httpx==0.28.1
+idna==3.10
+jiter==0.9.0
+openai==1.68.2
+passlib==1.7.4
+psycopg2==2.9.10
 psycopg2-binary==2.9.9
-
-# CORS
+pyasn1==0.6.1
+pydantic==2.6.3
+pydantic_core==2.16.3
+PyJWT==2.8.0
+python-dotenv==1.0.0
+python-jose==3.3.0
+python-multipart==0.0.9
+rsa==4.9
+six==1.17.0
+sniffio==1.3.1
+SQLAlchemy==2.0.39
+sqlmodel==0.0.14
 starlette==0.36.3
+tqdm==4.67.1
+typing_extensions==4.12.2
+uvicorn==0.27.1
